@@ -1,4 +1,5 @@
 import { Scene, Math } from "phaser";
+import GameOver from "./GameOver";
 
 export default class Level extends Scene{
 
@@ -26,6 +27,7 @@ export default class Level extends Scene{
         this.load.image('pipeDown', "assets/pipe-greenDown.png");
         this.load.image('pipeUp', "assets/pipe-greenUp.png");
         this.load.audio('fly', "assets/sfx/wing.ogg");
+        this.load.audio('gameOver', 'assets/sfx/die.ogg')
 
     }
     
@@ -81,6 +83,7 @@ export default class Level extends Scene{
         //Cursors
         this.cursors = this.input.keyboard.createCursorKeys();
 
+
         
     }
     
@@ -124,9 +127,10 @@ export default class Level extends Scene{
         })
 
         if( this.player.y >= this.scale.height+200){
-            console.log("Foi de ralo Playboy!! '-' ")
-            this.scene.start('game-over')
+            console.log("Foi de ralo Playboy!! '-' ");
             this.sound.play('gameOver');
+            this.scene.start('game-over');
+            
         }
         
     }
