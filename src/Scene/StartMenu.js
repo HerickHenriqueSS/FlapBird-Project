@@ -1,14 +1,15 @@
 import { Scene } from "phaser";
 
-export default class GameOver extends Scene{
+export default class StarMenu extends Scene{
 
     constructor(){
-        super('game-over');
+        super('startMenu');
     }
 
     preload(){
         this.load.image('background', "assets/background-day.png");
-        this.load.image('gameOver', 'assets/gameover.png')
+        this.load.image('massage', 'assets/message.png');
+
     }
 
     create(){
@@ -16,16 +17,13 @@ export default class GameOver extends Scene{
         this.add.image(210, 320, 'background')
             .setScrollFactor(0, 0).setScale(1.5);
 
-        //Game-Over image
-        this.add.image(210, 340, 'gameOver')
+        //Menu Game    
+        this.add.image(210, 320, 'massage')
             .setScrollFactor(0, 0).setScale(1.5);
 
-        //return to "Level.js"
+        //Press to start game
         this.input.keyboard.once('keydown-SPACE', () => {
             this.scene.start('level');
-        })
-        this.input.keyboard.once('keydown-ESC', () => {
-            this.scene.start('startMenu');
         })
     }
 }

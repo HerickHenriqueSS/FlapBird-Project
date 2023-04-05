@@ -35,7 +35,6 @@ export default class Level extends Scene{
         //Background
         this.add.image(210, 320, 'background')
             .setScrollFactor(0, 0).setScale(1.5);
-
         
         //Physics 
         this.pipeDowns = this.physics.add.staticGroup();
@@ -68,8 +67,6 @@ export default class Level extends Scene{
         this.player = this.physics.add.image(210, 310, 'birdDown')
             .setScale(1.5);
 
-        //disable coligion
-        this.player.body.checkCollision.left= false;
 
         //Player velocity
         this.player.setVelocityX(100); 
@@ -83,8 +80,12 @@ export default class Level extends Scene{
         //Cursors
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        //Colliders
+        this.physics.add.collider(this.player, this.pipeDowns, this)
+        this.physics.add.collider(this.player, this.pipeUps, this)
 
-        
+        console.log(this.colisão)
+
     }
     
     update(time, del){
@@ -125,13 +126,13 @@ export default class Level extends Scene{
 
             }
         })
-
-        if( this.player.y >= this.scale.height+200){
-            console.log("Foi de ralo Playboy!! '-' ");
+        
+        if( this.player.y >= this.scale.height+100){
             this.sound.play('gameOver');
             this.scene.start('game-over');
             
-        }
+        }  
+        
         
     }
 }
