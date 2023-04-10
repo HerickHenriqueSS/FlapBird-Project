@@ -15,16 +15,17 @@ export default class Level extends Scene{
     /** @type {Phaser.GameObjects.Text} */
     pointsText;
 
-
     constructor(){
         super('level');
     }
 
     preload(){
         this.load.image('background', "assets/background-day.png");
-        this.load.image('base', "assets/base.png");
+        this.load.image('backgroundNight', "assets/background-night.png");
         this.load.image('birdDown', "assets/bluebird-downflap.png");
-        this.load.image('birdUp', "assets/bluebird-upflap.png");
+        this.load.image('birdUp', 'assets/bluebird-upflap.png');
+        this.load.image('birdDownRed', "assets/redbird-downflap.png");
+        this.load.image('birdUpRed', 'assets/redbird-upflap.png');
         this.load.image('pipeDown', "assets/pipe-greenDown.png");
         this.load.image('pipeUp', "assets/pipe-greenUp.png");
         this.load.audio('fly', "assets/sfx/wing.ogg");
@@ -35,7 +36,7 @@ export default class Level extends Scene{
     
     create(){
         //Background
-        this.add.image(210, 320, 'background')
+        this.background = this.add.image(210, 320, 'background')
             .setScrollFactor(0, 0).setScale(1.5);
         
         //Physics 
@@ -66,7 +67,7 @@ export default class Level extends Scene{
 
 
         //Player 
-        this.player = this.physics.add.image(210, 310, 'birdDown')
+        this.player = this.physics.add.image(210, 310, 'birdUp')
             .setScale(1.5);
 
 
@@ -94,20 +95,39 @@ export default class Level extends Scene{
             this.scene.start('game-over')
         })
 
-        this.player.setTexture('birdUp')
+        //Text Skin
+        const style = {color: '#000', fontSize: 17};
+        this.repeatText = this.add.text(210, 50, 'Press LEFT and RIGHT to altern skins!', style);
+        this.repeatText.setScrollFactor(0);
+        this.repeatText.setOrigin(0.5, 0)
+
+
     }
     
     update(time, del){
+        
+        console.log(this.player.setVelocity)
 
+        //Player Jump
         this.input.keyboard.once('keydown-SPACE', () => {
-            this.player.setTexture('birdDown')
             this.player.setVelocityY(-180);
             this.sound.play('fly')
-            this.player.setTexture('birdUp') 
-            if(this.keyboard.isDonw){
-                console.log('clicado');
-            }
+                        
         })
+
+        //Skin Player
+
+        this.input.keyboard.once('keydown-LEFT', () =>{
+            this.player.setTexture('birdUpRed');
+            this.background.setTexture('backgroundNight')
+        })
+
+        this.input.keyboard.once('keydown-RIGHT', () =>{
+            this.player.setTexture('birdUp');
+            this.background.setTexture('background')
+
+        })
+
 
         //Recycle pipes
         this.pipeUps.children.iterate( child => {

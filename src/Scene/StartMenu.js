@@ -6,9 +6,16 @@ export default class StarMenu extends Scene{
         super('startMenu');
     }
 
+    playerBlueDown = "assets/bluebird-downflap"
+    playerBlueUp = "assets/bluebird-upflap"
+    playerRedDown = "assets/redbird-downflap"
+    playerRedUp = "assets/redbird-upflap"
+
     preload(){
         this.load.image('background', "assets/background-day.png");
         this.load.image('massage', 'assets/message.png');
+        this.load.image('birdBlue', this.playerBlueDown);
+        this.load.image('birdRed', this.playerRedDown);
 
     }
 
@@ -25,5 +32,10 @@ export default class StarMenu extends Scene{
         this.input.keyboard.once('keydown-SPACE', () => {
             this.scene.start('level');
         })
+        
+        const style = {color: '#000', fontSize: 30};
+        this.repeatText = this.add.text(210, 550, 'Press Space to Start', style);
+        this.repeatText.setScrollFactor(0);
+        this.repeatText.setOrigin(0.5, 0)
     }
 }

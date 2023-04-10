@@ -27,5 +27,14 @@ export default class GameOver extends Scene{
         this.input.keyboard.once('keydown-ESC', () => {
             this.scene.start('startMenu');
         })
+
+        //Points
+        const style = {color: '#000', fontSize: 30};
+        this.repeatText = this.add.text(210, 530, 'Press Space to Repeat', style);
+        this.menuText = this.add.text(210, 570, 'Press ESC to Menu', style);
+        this.repeatText.setScrollFactor(0);
+        this.repeatText.setOrigin(0.5, 0)
+        this.menuText.setScrollFactor(0);
+        this.menuText.setOrigin(0.5, 0)
     }
 }
