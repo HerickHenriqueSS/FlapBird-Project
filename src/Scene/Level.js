@@ -1,6 +1,4 @@
 import { Scene, Math } from "phaser";
-import GameOver from "./GameOver";
-
 export default class Level extends Scene{
 
     /** @type {Phaser.Physics.Arcade.Sprite} */
@@ -13,6 +11,9 @@ export default class Level extends Scene{
     
     /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
     cursors;
+
+    /** @type {Phaser.GameObjects.Text} */
+    pointsText;
 
 
     constructor(){
@@ -28,6 +29,7 @@ export default class Level extends Scene{
         this.load.image('pipeUp', "assets/pipe-greenUp.png");
         this.load.audio('fly', "assets/sfx/wing.ogg");
         this.load.audio('gameOver', 'assets/sfx/die.ogg')
+        this.load.audio('hit', 'assets/sfx/hit.ogg')
 
     }
     
@@ -81,21 +83,31 @@ export default class Level extends Scene{
         this.cursors = this.input.keyboard.createCursorKeys();
 
         //Colliders
-        this.physics.add.collider(this.player, this.pipeDowns, this)
-        this.physics.add.collider(this.player, this.pipeUps, this)
+        this.physics.add.collider(this.player, this.pipeDowns, () =>{
+            this.sound.play('hit')
+            this.sound.play('gameOver')
+            this.scene.start('game-over')
+        })
+        this.physics.add.collider(this.player, this.pipeUps,  () =>{
+            this.sound.play('hit')
+            this.sound.play('gameOver')
+            this.scene.start('game-over')
+        })
 
-        console.log(this.colisão)
-
+        this.player.setTexture('birdUp')
     }
     
     update(time, del){
-        if(this.cursors.space.isDown){
-            this.player.setVelocityY(-180);
-            this.player.setTexture('birdUp')
-            this.sound.play('fly')
-        }else{
+
+        this.input.keyboard.once('keydown-SPACE', () => {
             this.player.setTexture('birdDown')
-        }
+            this.player.setVelocityY(-180);
+            this.sound.play('fly')
+            this.player.setTexture('birdUp') 
+            if(this.keyboard.isDonw){
+                console.log('clicado');
+            }
+        })
 
         //Recycle pipes
         this.pipeUps.children.iterate( child => {
@@ -104,7 +116,6 @@ export default class Level extends Scene{
 
             // Position pipes X
             const scrollX = this.cameras.main.scrollX;
-            console.log(scrollX)
             if( pipeUp.x + 400 <= scrollX){
                 pipeUp.y +150 <= Math.Between(320,500);
                 pipeUp.x = scrollX + 870;
@@ -118,7 +129,6 @@ export default class Level extends Scene{
 
             // Position pipes X
             const scrollX = this.cameras.main.scrollX;
-            console.log(scrollX)
             if( pipeDown.x +400 <= scrollX){ 
                 pipeDown.y -150 <= Math.Between(320,500)
                 pipeDown.x = scrollX + 870;
@@ -127,7 +137,8 @@ export default class Level extends Scene{
             }
         })
         
-        if( this.player.y >= this.scale.height+100){
+        //Dead zone 
+        if( this.player.y >= this.scale.height){
             this.sound.play('gameOver');
             this.scene.start('game-over');
             
